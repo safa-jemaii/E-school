@@ -7,35 +7,75 @@ use App\Models\Etudiant;
 
 class EtudiantController extends Controller
 {
-    public function getEtudiant()
+     public function getEtudiant()
+     {
+         $etudiants = Etudiant::all();
+         return view('etudiant.liste', compact('etudiants'));
+    }
+
+
+
+
+    public function getEtudiantsAPI()
     {
         $etudiants = Etudiant::all();
-        return view('etudiant.liste', compact('etudiants'));
+        return response()->json($etudiants);
     }
+
+
+
 
     public function addEtudiant()
     {
         return view('etudiant.ajouter');
     }
 
+    // public function ajouter_etudiant_traitement(Request $request)
+    // {
+    // $request->validate([
+    //     'nom' => 'required',
+    //     'prenom' => 'required',
+    //     'class' => 'required'
+    // ]);
+
+
+    // $etudiant = new Etudiant();
+    // $etudiant->nom = $request->nom;
+    // $etudiant->prenom = $request->prenom;
+    // $etudiant->class = $request->class;
+
+    // $etudiant->save();
+    // return redirect('/ajouter')->with('status', 'L\'étudiant a bien ajouté avec succees.');
+
+    // }
+
+
     public function ajouter_etudiant_traitement(Request $request)
-    {
+{
     $request->validate([
         'nom' => 'required',
         'prenom' => 'required',
         'class' => 'required'
     ]);
 
-
     $etudiant = new Etudiant();
     $etudiant->nom = $request->nom;
     $etudiant->prenom = $request->prenom;
     $etudiant->class = $request->class;
 
-    $etudiant->save();
-    return redirect('/ajouter')->with('status', 'L\'étudiant a bien ajouté avec succees.');
-
+    if ($etudiant->save()) {
+        // Student added successfully, return a JSON response with a 201 status code.
+        return response()->json(['message' => 'L\'étudiant a bien été ajouté avec succès.'], 201);
+    } else {
+        // An error occurred, return a JSON response with a 500 status code.
+        return response()->json(['message' => 'Erreur lors de l\'ajout de l\'étudiant.'], 500);
     }
+}
+
+
+
+
+
 
 public function update_etudiant($id){
     $etudiants = Etudiant::find($id);
@@ -43,34 +83,63 @@ public function update_etudiant($id){
 }
 
 
-public function update_etudiant_traitement(Request $request){
+// public function update_etudiant_traitement(Request $request){
 
+//     $request->validate([
+//         'id' => 'required',
+//         'nom' => 'required',
+//         'prenom' => 'required',
+//         'class' => 'required'
+//     ]);
+
+// //find the student by id
+// // dd($request->all());
+//     $etudiant = Etudiant::find($request->id);
+
+//     if(!$etudiant){
+//      // Handle the case where the student is not found
+//      return redirect('/etudiant')->with('error', 'Étudiant introuvable.');
+//     }
+
+//     //update the student
+//     $etudiant->nom = $request->nom;
+//     $etudiant->prenom = $request->prenom;
+//     $etudiant->class = $request->class;
+
+//     $etudiant->update();
+//     return redirect('/etudiant')->with('status', 'L\'étudiant a bien modifié avec succees.');
+
+
+// }
+
+
+public function update_etudiant_traitement(Request $request)
+{
     $request->validate([
         'id' => 'required',
         'nom' => 'required',
         'prenom' => 'required',
         'class' => 'required'
     ]);
-
-//find the student by id
-// dd($request->all());
+    // dd($request->all());
     $etudiant = Etudiant::find($request->id);
 
-    if(!$etudiant){
-     // Handle the case where the student is not found
-     return redirect('/etudiant')->with('error', 'Étudiant introuvable.');
+    if (!$etudiant) {
+        return response()->json(['message' => 'Étudiant introuvable.'], 404);
     }
 
-    //update the student
     $etudiant->nom = $request->nom;
     $etudiant->prenom = $request->prenom;
     $etudiant->class = $request->class;
 
-    $etudiant->update();
-    return redirect('/etudiant')->with('status', 'L\'étudiant a bien modifié avec succees.');
+    if ($etudiant->save()) {
+        return response()->json(['message' => 'L\'étudiant a bien été modifié avec succès.'], 200);
 
-
+    } else {
+        return response()->json(['message' => 'Erreur lors de la modification de l\'étudiant.'], 500);
+    }
 }
+
 
 
 // public function update_etudiant_traitement(Request $request){

@@ -14,9 +14,19 @@ use App\Http\Controllers\EtudiantController;
 |
 */
 
-Route::get('/etudiant', [EtudiantController::class, 'getEtudiant']);
+ Route::get('/etudiant', [EtudiantController::class, 'getEtudiant']);
+
+Route::get('/api/etudiants', [EtudiantController::class, 'getEtudiantsAPI']);
+
 Route::get('/ajouter', [EtudiantController::class, 'addEtudiant']);
-Route::post('/ajouter/traitemnt', [EtudiantController::class, 'ajouter_etudiant_traitement']);
+// Route::post('/api/ajouter/traitemnt', [EtudiantController::class, 'ajouter_etudiant_traitement']);
+Route::post('/ajouter-etudiant-traitement', [EtudiantController::class, 'ajouter_etudiant_traitement']);
+
+
+
 Route::get('/update-etudiant/{id}', [EtudiantController::class, 'update_etudiant']);
-Route::post('/update/traitement', [EtudiantController::class, 'update_etudiant_traitement']);
-Route::get('/ delete-etudiant/{id}', [EtudiantController::class, 'delete_etudiant']);
+// Route::post('/update-etudiant-traitement', [EtudiantController::class, 'update_etudiant_traitement']);
+Route::put('/update-etudiant-traitement', [EtudiantController::class, 'update_etudiant_traitement']);
+
+Route::delete('/delete-etudiant/{id}', [EtudiantController::class, 'delete_etudiant']);
+
